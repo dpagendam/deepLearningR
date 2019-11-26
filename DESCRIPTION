@@ -1,0 +1,11 @@
+Package: deepLearningR
+Type: Package
+Title: Useful functions for helping build Deep Learning models in Keras
+Version: 0.1.0
+Author: Dan Pagendam
+Maintainer: Dan Pagendam <dan.pagendam@csiro.au>
+Description: This package provides some functions that may be useful for building Deep Neural Network models in Keras and R where data is environmental in nature (e.g. spatio-temporal).
+License: GPL
+Encoding: UTF-8
+LazyData: true
+Imports: raster
