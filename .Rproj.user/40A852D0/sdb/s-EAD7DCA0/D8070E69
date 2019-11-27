@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' @title Construct Rasters from EOFs.\n#' @description \\code{EOFsToRaster} constructs one or more rasters from a set of Empirical Orthogonal Functions (EOFs).\n#' #'\n#' @param EOFs is a matrix, whose row vectors contain empirical orthogonal functions.\n#' @param coefficients is a matrix containing coefficients to use to create rasters as row vectors.  The number of columns on EOFs must equl the number of columns in the coefficients matrix.\n#' @param dims is a vector of length 2 containing the number of rows (first element) and number of columns (second element) of the raster.\n#' @param validPixels contains indices for pixels that are masked out of the EOFs (i.e. the number of rows in the EOFs can be less than the number of pixels in the raster).\n#'\n#' @return a list containing raster objects (one for each row of the coefficients matrix).\n#' @export\n#'\n#' @examples\n\nEOFsToRaster <- function(EOFs, coefficients, dims, validPixels)\n{\n  library(raster)\n  if(class(EOFs) != \"matrix\")\n  {\n    stop(\"Argument EOFs must be a matrix.\")\n  }\n  if(class(coefficients) != \"matrix\")\n  {\n    stop(\"Argument coefficients must be a matrix.\")\n  }\n  if(ncol(coefficients) != ncol(EOFs))\n  {\n    stop(\"ncol(coefficients) and ncol(EOFs) must be equal.\")\n  }\n  dims <- round(dims)\n  if(!all(is.numeric(dims)))\n  {\n    stop(\"Argument dims can only contain numeric values\")\n  }\n\n  rasterList <- list()\n  for(i in 1:nrow(coefficients))\n  {\n    rasterVals <- EOFs %*% matrix(coefficients[i, ], ncol = 1)\n    rasterVector <- rep(NA, prod(dims))\n    rasterVector[validPixels] <- rasterVals\n    r <- raster(nrows = dims[1], ncols = dims[2])\n    r <- setValues(r, rasterVector)\n    rasterList[[i]] <- r\n  }\n\n  return(rasterList)\n}\n",
+    "created" : 1574812966558.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1709927521",
+    "id" : "D8070E69",
+    "lastKnownWriteTime" : 1574749783,
+    "last_content_update" : 1574749783,
+    "path" : "~/GitHub/deepLearningR/R/EOFsToRaster.R",
+    "project_path" : "R/EOFsToRaster.R",
+    "properties" : {
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#' @title Extract images from directory.\n#' @description \\code{extract_feature }\n#' #'\n#' @param dir_path a directory as a character string.\n#' @param width of image in pixels\n#' @param height of image in pixels\n#' @param grayScale boolean.  True converts to grayscale, FALSE retains RGB.\n#' @param labelsExist boolean.  Are the labels in the file name.\n#'\n#' @return a matrix of features.\n#' @export\n#'\n#' @examples\n\n\n#need a vector y which contains 1s and zeros based on membership to the two classes\nextract_feature <- function(dir_path, width, height, grayScale, labelsExist = T) {\n  library(EBImage)\n  library(stringr)\n  library(pbapply)\n\n  img_size <- width * height\n\n  ## List images in path\n  images_names <- list.files(dir_path, pattern = \"*.png\")\n\n  if(labelsExist){\n    diagnosis <- str_extract(images_names, \"(class0.png|class1.png)$\")\n    # Set negative for IDC == 0 and postivie for IDC == 1\n    key <- c(\"class0.png\" = 0, \"class1.png\" = 1)\n    y <- key[diagnosis]\n  }\n\n  print(paste(\"Start processing\", length(images_names), \"images\"))\n  ## This function will resize an image, turn it into greyscale\n  rescaleImage <- function(imgname) {\n    ## Read image\n    img <- readImage(file.path(dir_path, imgname))\n    ## Resize image\n    img_resized <- resize(img, w = width, h = height)\n    ## Set to grayscale (normalized to max)\n    if(grayScale)\n    {\n      grayimg <- channel(img_resized, \"gray\")\n      ## Get the image as a matrix\n      img_array <- grayimg@.Data\n    }\n    else\n    {\n      img_array <- img_resized@.Data\n    }\n    ## Coerce to a vector (row-wise)\n    img_vector <- as.vector(img_array)\n    return(img_vector)\n  }\n  feature_list <- pblapply(images_names, rescaleImage)\n  ## bind the list of vector into matrix\n  feature_matrix <- do.call(rbind, feature_list)\n  feature_matrix <- as.data.frame(feature_matrix)\n  ## Set names\n  names(feature_matrix) <- paste0(\"pixel\", c(1:img_size))\n\n  if(labelsExist)\n  {\n    return(list(X = feature_matrix, y = y))\n  }\n  else\n  {\n    return(feature_matrix)\n  }\n}\n\n",
+    "created" : 1574812960407.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2751277205",
+    "id" : "B153C2B7",
+    "lastKnownWriteTime" : 1574813221,
+    "last_content_update" : 1574813221002,
+    "path" : "~/GitHub/deepLearningR/R/extract_feature.R",
+    "project_path" : "R/extract_feature.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
