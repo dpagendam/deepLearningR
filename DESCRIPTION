@@ -8,4 +8,5 @@ Description: This package provides some functions that may be useful for buildin
 License: GPL
 Encoding: UTF-8
 LazyData: true
-Imports: raster
+Remotes: github::aoles/EBImage
+Imports: raster, pbapply, EBImage
